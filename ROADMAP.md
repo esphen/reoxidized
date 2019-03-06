@@ -61,13 +61,31 @@ fn FooComponent() -> reoxidized::Component {
 }
 ```
 
+- [ ] Support rendering `None` to render nothing
+```rust
+#[Component]
+fn VoidComponent() -> reoxidized::Component {
+  None
+}
+```
+
 - [ ] Support passing "props" down to components
 ```rust
-use components::{Sidebar, Main};
+#[derive(Props)]
+struct OtherComponentProps {
+  hide: bool,
+  title: String,
+  content: String
+}
 
-fn OtherComponent() -> reoxidized::Component {
+fn OtherComponent(props: OtherComponentProps) -> reoxidized::Component {
+  if props.hide { return None };
+
   gtk! {
     <label>
+      {props.title}
+      {props.content}
+    </label>
   }
 }
 
@@ -76,7 +94,7 @@ fn FooComponent() -> reoxidized::Component {
 
   gtk!{
     <window>
-      <OtherComponent someBool title="My awesome app" content={article} />
+      <OtherComponent hide title="My awesome app" content={article} />
     </window>
   }
 }
